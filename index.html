@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Le Van Minh — Data Engineer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --bg2: #0f0f1a;
+    --bg3: #13131f;
+    --border: rgba(255,255,255,0.06);
+    --border-hover: rgba(99,179,237,0.3);
+    --text: #e8e8f0;
+    --muted: #6b7280;
+    --accent: #63b3ed;
+    --accent2: #4fd1c5;
+    --accent3: #f687b3;
+    --green: #68d391;
+    --yellow: #f6e05e;
+    --orange: #f6ad55;
+    --purple: #b794f4;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Syne', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Grid background */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(99,179,237,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(99,179,237,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Glow orbs */
+  .orb {
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(80px);
+    pointer-events: none;
+    z-index: 0;
+  }
+  .orb1 { width: 400px; height: 400px; background: rgba(99,179,237,0.07); top: -100px; right: -100px; }
+  .orb2 { width: 300px; height: 300px; background: rgba(79,209,197,0.05); bottom: 100px; left: -80px; }
+
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.2rem 3rem;
+    background: rgba(10,10,15,0.8);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav-logo {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: var(--accent);
+    letter-spacing: 0.05em;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 2rem;
+    list-style: none;
+  }
+
+  .nav-links a {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--muted);
+    text-decoration: none;
+    letter-spacing: 0.05em;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--accent); }
+
+  main {
+    position: relative;
+    z-index: 1;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 2rem;
+  }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-top: 5rem;
+    animation: fadeUp 0.8s ease both;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .hero-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--accent);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .hero-label::before {
+    content: '';
+    display: block;
+    width: 32px;
+    height: 1px;
+    background: var(--accent);
+  }
+
+  .hero h1 {
+    font-size: clamp(3rem, 8vw, 5.5rem);
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    margin-bottom: 0.5rem;
+  }
+
+  .hero h1 .highlight {
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero-sub {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    color: var(--muted);
+    margin-top: 1.5rem;
+    margin-bottom: 2.5rem;
+    line-height: 1.8;
+  }
+
+  .hero-sub span { color: var(--accent2); }
+
+  .hero-cta {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    padding: 10px 24px;
+    border-radius: 4px;
+    text-decoration: none;
+    letter-spacing: 0.08em;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .btn-primary {
+    background: var(--accent);
+    color: #0a0a0f;
+    font-weight: 700;
+  }
+
+  .btn-primary:hover {
+    background: var(--accent2);
+    transform: translateY(-2px);
+  }
+
+  .btn-ghost {
+    border: 1px solid var(--border-hover);
+    color: var(--accent);
+  }
+
+  .btn-ghost:hover {
+    background: rgba(99,179,237,0.08);
+    transform: translateY(-2px);
+  }
+
+  /* SECTIONS */
+  section {
+    padding: 5rem 0;
+    animation: fadeUp 0.8s ease both;
+    animation-play-state: paused;
+  }
+
+  section.visible { animation-play-state: running; }
+
+  .section-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .section-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .section-heading {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 2.5rem;
+    letter-spacing: -0.02em;
+  }
+
+  /* ABOUT */
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    align-items: start;
+  }
+
+  .about-text {
+    font-size: 16px;
+    line-height: 1.8;
+    color: rgba(232,232,240,0.75);
+  }
+
+  .about-text p { margin-bottom: 1rem; }
+
+  .about-text strong { color: var(--text); font-weight: 600; }
+
+  .about-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+
+  .stat-card {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.25rem;
+    transition: border-color 0.2s;
+  }
+
+  .stat-card:hover { border-color: var(--border-hover); }
+
+  .stat-number {
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--accent);
+    line-height: 1;
+  }
+
+  .stat-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 4px;
+    letter-spacing: 0.05em;
+  }
+
+  /* SKILLS */
+  .skills-grid {
+    display: grid;
+    gap: 1.5rem;
+  }
+
+  .skill-group {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.5rem;
+    transition: border-color 0.2s;
+  }
+
+  .skill-group:hover { border-color: var(--border-hover); }
+
+  .skill-group-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+  }
+
+  .badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 12px;
+    border-radius: 4px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    transition: transform 0.15s, opacity 0.15s;
+  }
+
+  .badge:hover { transform: translateY(-2px); opacity: 0.9; }
+
+  .badge-python { background: rgba(55,118,171,0.2); color: #63b3ed; border: 1px solid rgba(55,118,171,0.3); }
+  .badge-sql { background: rgba(204,41,39,0.2); color: #fc8181; border: 1px solid rgba(204,41,39,0.3); }
+  .badge-postgres { background: rgba(65,111,225,0.2); color: #76a9fa; border: 1px solid rgba(65,111,225,0.3); }
+  .badge-mysql { background: rgba(68,121,161,0.2); color: #63b3ed; border: 1px solid rgba(68,121,161,0.3); }
+  .badge-docker { background: rgba(36,144,208,0.2); color: #63b3ed; border: 1px solid rgba(36,144,208,0.3); }
+  .badge-git { background: rgba(240,80,50,0.2); color: #fc8181; border: 1px solid rgba(240,80,50,0.3); }
+  .badge-linux { background: rgba(252,198,36,0.2); color: #f6e05e; border: 1px solid rgba(252,198,36,0.3); }
+  .badge-uv { background: rgba(222,95,233,0.2); color: #d6bcfa; border: 1px solid rgba(222,95,233,0.3); }
+  .badge-pandas { background: rgba(21,101,150,0.2); color: #63b3ed; border: 1px solid rgba(21,101,150,0.3); }
+
+  /* PROJECTS */
+  .projects-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem;
+  }
+
+  .project-card {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.75rem;
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    transition: all 0.25s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .project-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    opacity: 0;
+    transition: opacity 0.25s;
+  }
+
+  .project-card:hover {
+    border-color: var(--border-hover);
+    transform: translateY(-4px);
+  }
+
+  .project-card:hover::before { opacity: 1; }
+
+  .project-card.featured {
+    grid-column: 1 / -1;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 2rem;
+  }
+
+  .project-icon {
+    font-size: 1.5rem;
+    flex-shrink: 0;
+  }
+
+  .project-name {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 2px;
+  }
+
+  .project-desc {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.6;
+    flex: 1;
+  }
+
+  .project-meta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: auto;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--border);
+  }
+
+  .project-lang {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--accent2);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .lang-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--accent2);
+  }
+
+  .project-stars {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+  }
+
+  .project-arrow {
+    margin-left: auto;
+    color: var(--muted);
+    font-size: 16px;
+    transition: transform 0.2s, color 0.2s;
+  }
+
+  .project-card:hover .project-arrow {
+    transform: translate(3px, -3px);
+    color: var(--accent);
+  }
+
+  /* CONTACT */
+  .contact-box {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 3rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .contact-box::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 50% 0%, rgba(99,179,237,0.06), transparent 60%);
+    pointer-events: none;
+  }
+
+  .contact-box h3 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+  }
+
+  .contact-box p {
+    color: var(--muted);
+    font-size: 15px;
+    margin-bottom: 2rem;
+    line-height: 1.7;
+  }
+
+  .contact-links {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 2rem 0;
+    text-align: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    position: relative;
+    z-index: 1;
+  }
+
+  footer span { color: var(--accent); }
+
+  /* Scroll animations */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (max-width: 640px) {
+    nav { padding: 1rem 1.5rem; }
+    .nav-links { display: none; }
+    .about-grid { grid-template-columns: 1fr; }
+    .projects-grid { grid-template-columns: 1fr; }
+    .project-card.featured { flex-direction: column; }
+    main { padding: 0 1.25rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="orb orb1"></div>
+<div class="orb orb2"></div>
+
+<nav>
+  <div class="nav-logo">lvm.dev</div>
+  <ul class="nav-links">
+    <li><a href="#about">about</a></li>
+    <li><a href="#skills">skills</a></li>
+    <li><a href="#projects">projects</a></li>
+    <li><a href="#contact">contact</a></li>
+  </ul>
+</nav>
+
+<main>
+  <!-- HERO -->
+  <section class="hero" id="home">
+    <div class="hero-label">Data Engineer · Ho Chi Minh, Vietnam 🇻🇳</div>
+    <h1>
+      Le Van<br>
+      <span class="highlight">Minh.</span>
+    </h1>
+    <p class="hero-sub">
+      Building <span>data pipelines</span> that turn raw data into insights.<br>
+      Student @ FPT University HCM · Open to opportunities.
+    </p>
+    <div class="hero-cta">
+      <a href="#projects" class="btn btn-primary">View Projects →</a>
+      <a href="https://github.com/minnobug" target="_blank" class="btn btn-ghost">GitHub ↗</a>
+      <a href="https://linkedin.com/in/lvm205s" target="_blank" class="btn btn-ghost">LinkedIn ↗</a>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <div class="section-title">about me</div>
+    <h2 class="section-heading">Who I am</h2>
+    <div class="about-grid">
+      <div class="about-text">
+        <p>I'm <strong>Le Van Minh</strong>, a Data Engineering student at <strong>FPT University Ho Chi Minh</strong> with a passion for building robust data systems.</p>
+        <p>I focus on designing and implementing <strong>data pipelines</strong>, working with databases, and transforming raw data into actionable insights. Currently learning and building in the data engineering space.</p>
+        <p>Active member of the <strong>DataTalks.Club</strong> community — always learning, always building.</p>
+      </div>
+      <div class="about-stats">
+        <div class="stat-card">
+          <div class="stat-number">2+</div>
+          <div class="stat-label">projects built</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">5+</div>
+          <div class="stat-label">tools mastered</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">FPT</div>
+          <div class="stat-label">University HCM</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">🇻🇳</div>
+          <div class="stat-label">based in Vietnam</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SKILLS -->
+  <section id="skills">
+    <div class="section-title">skills & tools</div>
+    <h2 class="section-heading">What I work with</h2>
+    <div class="skills-grid">
+      <div class="skill-group">
+        <div class="skill-group-title">Languages</div>
+        <div class="badges">
+          <span class="badge badge-python">🐍 Python</span>
+          <span class="badge badge-sql">🗃️ SQL</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <div class="skill-group-title">Databases</div>
+        <div class="badges">
+          <span class="badge badge-postgres">🐘 PostgreSQL</span>
+          <span class="badge badge-mysql">🐬 MySQL</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <div class="skill-group-title">Tools & DevOps</div>
+        <div class="badges">
+          <span class="badge badge-docker">🐳 Docker</span>
+          <span class="badge badge-git">🔥 Git</span>
+          <span class="badge badge-linux">🐧 Linux</span>
+          <span class="badge badge-uv">⚡ uv</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <div class="skill-group-title">Libraries</div>
+        <div class="badges">
+          <span class="badge badge-pandas">🐼 Pandas</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROJECTS -->
+  <section id="projects">
+    <div class="section-title">projects</div>
+    <h2 class="section-heading">What I've built</h2>
+    <div class="projects-grid">
+      <a class="project-card featured" href="https://github.com/minnobug/smartcity-data-pipeline" target="_blank">
+        <div class="project-icon">🚗</div>
+        <div style="flex:1">
+          <div class="project-name">Smart City Data Pipeline</div>
+          <div class="project-desc">Real-time Smart City IoT data pipeline with Kafka, Spark & AWS. Vehicle telemetry streaming analytics — ingesting, processing, and storing live sensor data at scale.</div>
+          <div class="project-meta">
+            <div class="project-lang"><div class="lang-dot"></div>Python</div>
+            <div class="project-stars">⭐ Featured</div>
+            <div class="project-arrow">↗</div>
+          </div>
+        </div>
+      </a>
+
+      <a class="project-card" href="https://github.com/minnobug/stock-data-pipeline" target="_blank">
+        <div class="project-icon">📈</div>
+        <div class="project-name">Stock Data Pipeline</div>
+        <div class="project-desc">Pipeline to collect stock price data from CSV, store in PostgreSQL, and transform with SQL for analysis.</div>
+        <div class="project-meta">
+          <div class="project-lang"><div class="lang-dot" style="background:#f6e05e"></div>SQL</div>
+          <div class="project-arrow">↗</div>
+        </div>
+      </a>
+
+      <a class="project-card" href="https://github.com/minnobug/docker-de-workshop" target="_blank">
+        <div class="project-icon">🐳</div>
+        <div class="project-name">Docker DE Workshop</div>
+        <div class="project-desc">Data Engineering workshop using Docker & GitHub Codespaces — hands-on environment for learning DE concepts.</div>
+        <div class="project-meta">
+          <div class="project-lang"><div class="lang-dot" style="background:#63b3ed"></div>Python</div>
+          <div class="project-arrow">↗</div>
+        </div>
+      </a>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact">
+    <div class="section-title">contact</div>
+    <div class="contact-box">
+      <h3>Let's connect 👋</h3>
+      <p>I'm open to internships, collaborations, and data engineering opportunities.<br>Feel free to reach out!</p>
+      <div class="contact-links">
+        <a href="https://github.com/minnobug" target="_blank" class="btn btn-primary">GitHub ↗</a>
+        <a href="https://linkedin.com/in/lvm205s" target="_blank" class="btn btn-ghost">LinkedIn ↗</a>
+        <a href="https://datatalks.club" target="_blank" class="btn btn-ghost">DataTalks.Club ↗</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <p>Built by <span>Le Van Minh</span> · minnobug · 2025</p>
+</footer>
+
+<script>
+  // Scroll reveal
+  const sections = document.querySelectorAll('section:not(.hero)');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.1 });
+  sections.forEach(s => observer.observe(s));
+
+  // Nav active state
+  const navLinks = document.querySelectorAll('.nav-links a');
+  const allSections = document.querySelectorAll('section[id]');
+  const navObserver = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        navLinks.forEach(l => l.style.color = '');
+        const active = document.querySelector(`.nav-links a[href="#${e.target.id}"]`);
+        if (active) active.style.color = 'var(--accent)';
+      }
+    });
+  }, { threshold: 0.5 });
+  allSections.forEach(s => navObserver.observe(s));
+</script>
+</body>
+</html>
